@@ -14,7 +14,7 @@ if($name === "console"){
 return [
     'runtimePath' => PROJECT_ROOT . "/runtime/{$name}",
     'components'  => [
-        'request'    => [
+        'request' => [
             'cookieValidationKey' => env('COOKIE_VALIDE_KEY'),
             'enableCsrfCookie'    => true,
             'csrfCookie'          => [
@@ -32,13 +32,13 @@ return [
         //     ],
         // ],
         /** @see yii\web\session */
-        'session'    => [
+        'session' => [
             'cookieParams' => [
                 'httponly' => true,
-                'domain' => isset($params['cookie']['domain']) ? $params['cookie']['domain'] : null,
+                'domain'   => isset($params['cookie']['domain']) ? $params['cookie']['domain'] : null,
             ],
         ],
-        'db'         => [
+        'db'      => [
             'class'               => 'yii\db\Connection',
             'dsn'                 => env('DB_DSN'), // MySQL, MariaDB
             'username'            => env('DB_USERNAME'), //数据库用户名
@@ -49,10 +49,17 @@ return [
             'schemaCacheDuration' => 3600,
             'schemaCache'         => 'cache',
         ],
-        'cache'      => [
+        'cache'   => [
             /** @see yii\caching\FileCache */
             'class'          => 'yii\caching\FileCache',
             'directoryLevel' => 2,
+        ],
+        'redis'   => [
+            /** @see \yii\redis\Connection */
+            'class'    => 'yii\redis\Connection',
+            'hostname' => env('REDIS_HOST'),
+            'port'     => env('REDIS_PORT'),
+            'database' => env('REDIS_DATABASE'),
         ],
     ],
     'bootstrap'   => ['log'],
