@@ -1,0 +1,76 @@
+#!/usr/bin/env php
+<?php
+/**
+ * @category deploy.php
+ * @author   gouki <gouki.xiao@gmail.com>
+ * @created 2017/5/5 10:47
+ * @since
+ */
+$template = __DIR__ . "/deploy/httpd/template.php";
+$templateFiles = [
+    'apache' => __DIR__ . "/deploy/httpd/apache/template.conf",
+    'nginx'  => __DIR__ . "/deploy/httpd/nginx/template.conf",
+    'fab'    => __DIR__ . "/deploy/httpd/fab/template.py",
+    'env'    => __DIR__ . "/deploy/httpd/env/template.conf",
+];
+
+$param = isset($argv[1]) ? $argv[1]: "";
+
+$paramsFunc = function($file) {
+    if(!file_exists($file)){
+        echo "please copy __template.php to template.php",PHP_EOL;
+        exit;
+    }
+    return include $file;
+};
+$params = $paramsFunc($template);
+if(!$params || !isset($params['domainName'])){
+    echo "domain name not set",PHP_EOL;
+    exit();
+}
+$domainName = $params['domainName'];
+$replaces = [];
+
+foreach($params as $k => $val){
+    $replaces["{{$k}}"] = $val;
+}
+
+foreach($templateFiles as $k => $fileName){
+    if($param && $k != $param){
+        continue;
+    }
+    $content = file_get_contents($fileName);
+    $ext = pathinfo($fileName, PATHINFO_EXTENSION);
+    $newFileName = dirname($fileName) . "/{$domainName}.{$ext}";
+    if($k === "fab"){
+        $newFileName = __DIR__ . "/fabfile.py";
+    }
+    $replaced = autoProcess($fileName, $replaces, $content);
+    file_put_contents($newFileName, $replaced);
+}
+echo "Over";
+
+/**
+ * @param $filename
+ * @param $replaces
+ * @param $content
+ * @return mixed
+ */
+function autoProcess($filename, $replaces, $content)
+{
+    $dirName = basename(dirname($filename));
+    switch($dirName){
+        case "apache":
+            if($replaces['{otherDomain}'] != ""){
+                $content = preg_replace('/#(\s+ServerAlias)/si', '$1', $content);
+            }
+            break;
+        case "fab":
+            if(isset($replaces['{gatewayHostPass}']) && $replaces['{gatewayHostPass}'] != ''){
+                $content = preg_replace('/#env.gateway/', 'env.gateway', $content);
+            }
+            break;
+    }
+    $replaced = str_replace(array_keys($replaces), array_values($replaces), $content);
+    return $replaced;
+}

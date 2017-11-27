@@ -1,0 +1,6 @@
+.idea/
+.env
+composer.lock
+fabfile.py
+!readme.md
+stat.sql

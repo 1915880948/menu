@@ -1,0 +1,19 @@
+#SetEnvIfNoCase Origin "http?://(www\.dsd\.|static\.dsd\.|admin\.dsd\.|test\.dsd\.)?(iloveinshare\.com|qgugu\.com)(:\d+)?$" AccessControlAllowOrigin=$0
+#Header add Access-Control-Allow-Origin %{AccessControlAllowOrigin}e env=AccessControlAllowOrigin
+#Header set Access-Control-Allow-Methods "GET,POST,OPTIONS"
+#Header set Access-Control-Allow-Origin "*"
+#Header set Access-Control-Allow-Headers "accept, access-control-allow-headers, access-control-allow-origin, authorize, authtoken, http-authtoken"
+#Header set Access-Control-Allow-Headers "*"
+
+Options +FollowSymLinks
+#IndexIgnore */*
+RewriteEngine on
+# if a directory or a file exists, use it directly
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# otherwise forward it to index.php
+RewriteRule . index.php
+
+# the following is used when installed in root
+#RewriteRule ^.*$ /index.php [L]

@@ -1,0 +1,53 @@
+#!/usr/bin/env php
+<?php
+use yii\helpers\ArrayHelper;
+
+include __DIR__ . "/protected/apps/console.php";
+/**
+ * merge configs
+ */
+$config = yii\helpers\ArrayHelper::merge( //all configs
+    require(PROJECT_GLOBAL_CONFIG_PATH . '/main.php'), //global main
+    require(APP_CONFIG_PATH . '/main.php') //app main
+);
+if(isset($config['components']['urlManager'])){
+    unset($config['components']['urlManager']);
+}
+$project = 'application';
+Yii::setAlias($project, "@apps/{$project}");
+
+$projectConfigFile = Yii::getAlias("@{$project}/config/main.php");
+if(file_exists($projectConfigFile)){
+    $config = ArrayHelper::merge($config, require $projectConfigFile);
+}
+foreach(glob(Yii::getAlias("@{$project}/console/*Controller.php")) as $item){
+    $className = basename($item, ".php");
+    $consoleName = str_replace('controller', "", strtolower($className));
+    // $config['controllerMap'][$consoleName] = ['class' => "{$project}\\console\\{$className}"];
+    $config['controllerMap'][$consoleName] = ['class' => "{$project}\\console\\{$className}"];
+}
+$config['runtimePath'] = Yii::getAlias("@root/runtime/{$project}");
+// if($_SERVER['argv']){
+//     foreach($_SERVER['argv'] as $k => $param){
+//         $projectPrefix = '--project=';
+//         if(substr($param, 0, strlen($projectPrefix)) == $projectPrefix){
+//
+//             $project = str_replace($projectPrefix, "", $param);
+//             Yii::setAlias($project,"@apps/{$project}");
+//             $projectConfigFile = PROJECT_CONFIG_PATH . "/{$project}/main.php";
+//             if(file_exists($projectConfigFile)){
+//                 $config = ArrayHelper::merge($config, require $projectConfigFile);
+//             }
+//             unset($_SERVER['argv'][$k]);
+//         }
+//     }
+// }
+/**
+ * 以防万一
+ */
+unset($config['components']['request'], $config['components']['urlManager']);
+unset($config['modules']['debug']);
+
+$application = new yii\console\Application($config);
+$exitCode = $application->run();
+exit($exitCode);

@@ -1,0 +1,130 @@
+#!/usr/bin/env php
+<?php
+use Workerman\Connection\ConnectionInterface;
+use Workerman\Lib\Timer;
+use Workerman\Worker;
+use yii\base\Controller;
+use yii\console\Request;
+use yii\helpers\ArrayHelper;
+
+include dirname(__DIR__) . "/apps/console.php";
+/**
+ * merge configs
+ */
+$config = yii\helpers\ArrayHelper::merge( //all configs
+    require(PROJECT_GLOBAL_CONFIG_PATH . '/main.php'), //global main
+    require(APP_CONFIG_PATH . '/main.php') //app main
+);
+if(isset($config['components']['urlManager'])){
+    unset($config['components']['urlManager']);
+}
+if($_SERVER['argv']){
+    foreach($_SERVER['argv'] as $k => $param){
+        $projectPrefix = '--project=';
+        if(substr($param, 0, strlen($projectPrefix)) == $projectPrefix){
+
+            $project = str_replace($projectPrefix, "", $param);
+            Yii::setAlias($project, "@apps/{$project}");
+            $projectConfigFile = PROJECT_CONFIG_PATH . "/{$project}/main.php";
+            if(file_exists($projectConfigFile)){
+                $config = ArrayHelper::merge($config, require $projectConfigFile);
+            }
+            unset($_SERVER['argv'][$k]);
+        }
+    }
+}
+/**
+ * 以防万一
+ */
+unset($config['components']['request'], $config['components']['urlManager']);
+
+$application = new yii\console\Application($config);
+Worker::$pidFile =  Yii::getAlias('@root/runtime/') . str_replace('/', '_', __FILE__) . ".pid";
+$worker = new Worker("tcp://0.0.0.0:9999");
+$monitor_dir = realpath(__DIR__);
+
+$worker->count = 4;
+// 该进程收到reload信号不执行reload
+$worker->reloadable = false;
+// 进程启动后安装定时器
+$worker->onWorkerStart = function () use ($monitor_dir) {
+    // 只在debug模式下监控文件，守护进程模式不监控
+    if(!Worker::$daemonize){
+        // 定时检查被监控目录文件1秒内是否有修改
+        Timer::add(5, 'check_files_change', [$monitor_dir]);
+    }
+};
+// 检查文件1秒内是否有修改
+function check_files_change($monitor_dir)
+{
+    $dir_iterator = new RecursiveDirectoryIterator($monitor_dir);
+    $iterator = new RecursiveIteratorIterator($dir_iterator);
+    $time_now = time();
+    foreach($iterator as $file){
+        if(pathinfo($file, PATHINFO_EXTENSION) != 'php'){
+            continue;
+        }
+        // 在最近1秒内有修改
+        if($time_now - $file->getMTime() == 1){
+            echo $file . " update and reload\n";
+            // 给父进程发送reload信号
+            posix_kill(posix_getppid(), SIGUSR1);
+        }
+    }
+}
+
+function response_format($data, $is_error = 0)
+{
+    $result = [];
+    if($is_error){
+        $result['status'] = 0;
+        $result['error'] = $data;
+    } else{
+        $result['status'] = 1;
+        $result['datas'] = $data;
+    }
+
+    return json_encode($result, JSON_UNESCAPED_UNICODE);
+}
+
+$worker->onError = function (ConnectionInterface $connection) {
+    print_r(func_get_args());
+    $connection->close(response_format("ERROR", 1));
+};
+
+$worker->onMessage = function (ConnectionInterface $connection, $data) use ($application, $worker) {
+//    Console::output(sprintf("[%s]IP: %s:%s , Data: %s", date("Y-m-d H:i:s"), $connection->getRemoteIp(), $connection->getRemotePort(), var_export($data)));
+    /** @var Request $request */
+    $request = $application->getRequest();
+    if(isset($data['get'])){//证明是http
+        $params = $data['get'] ?: ($data['post'] ?: json_decode($GLOBALS['HTTP_RAW_POST_DATA'], true));
+        $request->setParams($params);
+    } else{
+        $request->setParams(json_decode($data, true));
+    }
+    list ($route, $params) = $request->resolve();
+
+    $application->requestedRoute = $route;
+    $parts = $application->createController($route);
+    if(is_array($parts)){
+        /* @var $controller Controller */
+        list($controller, $actionID) = $parts;
+        try{
+            $result = $controller->runAction($actionID, $params);
+            if(is_array($result) || is_object($result)){
+//                print_r(array_keys($result));
+//                echo PHP_EOL;
+            } else{
+//                echo $result, PHP_EOL;
+            }
+            $connection->close(response_format($result));
+        } catch(Exception $e){
+            $connection->close(response_format($e->getMessage(), 1));
+        }
+    } else{
+        $id = $application->getUniqueId();
+        $connection->close(response_format('Unable to resolve the request "' . ($id === '' ? $route : $id . '/' . $route) . '".', 1));
+    }
+};
+Worker::$logFile = Yii::getAlias('@root/runtime/') . "/workerman.log";
+Worker::runAll();

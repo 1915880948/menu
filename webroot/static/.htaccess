@@ -1,0 +1,10 @@
+#SetEnvIfNoCase Origin "http?://(www\.dsd\.|static\.dsd\.|admin\.dsd\.|test\.dsd\.)?(iloveinshare\.com|qgugu\.com)(:\d+)?$" AccessControlAllowOrigin=$0
+#Header add Access-Control-Allow-Origin %{AccessControlAllowOrigin}e env=AccessControlAllowOrigin
+#Header add Access-Control-Allow-Origin "http://backend.cx.videomob.cn"
+#Header add Access-Control-Allow-Origin "http://backend.cx.nisinfo.com"
+#<FilesMatch "\.(ttf|ttc|otf|eot|woff)">
+#    Header add Access-Control-Allow-Origin "*"
+#    Header add Access-Control-Allow-Headers "origin, x-requested-with, content-type"
+#    Header add Access-Control-Allow-Methods "GET"
+#</FilesMatch>
+

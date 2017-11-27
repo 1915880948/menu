@@ -1,0 +1,3 @@
+.textleft{text-align:left;}
+.breadcrumb>li, .breadcrumb>li.active{float:left;margin-top:5px;margin-bottom:-5px;}
+.tags{width:100%;}
