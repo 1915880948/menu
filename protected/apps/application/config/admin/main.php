@@ -8,7 +8,9 @@
 
 use common\core\template\blade\BladeView;
 use common\core\template\blade\ViewRenderer;
-
+$params = array_merge(
+    require(__DIR__ . '/params.php')
+);
 $appId = basename(__DIR__);
 $appName = defined('APP_GROUP') ? APP_GROUP : APP_NAME;
 $modules = [];
@@ -74,4 +76,5 @@ return [
     ],
     'bootstrap'           => env('APP') == 'dev' ? ['debug', 'log'] : ['log'],
     'modules'             => $modules,
+    'params'              => $params,
 ];

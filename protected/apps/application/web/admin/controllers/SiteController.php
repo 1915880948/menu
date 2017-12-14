@@ -17,6 +17,7 @@ use yii\filters\AccessControl;
  */
 class SiteController extends AdminBaseController
 {
+    public $enableCsrfValidation = false;
     use ActionsTrait;
     /**
      * 覆盖父类,表示login/info/clear 不需要登录
@@ -25,7 +26,7 @@ class SiteController extends AdminBaseController
      */
     public function behaviors()
     {
-        return [];
+//        return [];
         return [
             'access' => [
                 'class' => AccessControl::className(),

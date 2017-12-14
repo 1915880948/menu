@@ -85,6 +85,16 @@ function yUser()
 }
 
 /**
+ * @return null|\yii\web\IdentityInterface
+ * @see AdminUser
+ * @see WwwUser
+ */
+function yUserIdentity()
+{
+    return Yii::$app->getUser()
+        ->getIdentity();
+}
+/**
  * @param $message
  * @param string $category
  * @param int $type

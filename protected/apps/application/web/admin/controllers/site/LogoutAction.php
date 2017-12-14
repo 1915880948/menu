@@ -16,7 +16,7 @@ use qiqi\helper\MessageHelper;
  */
 class LogoutAction extends AdminBaseAction
 {
-    public $method = 'POST';
+//    public $method = 'POST';
 
     public function run()
     {

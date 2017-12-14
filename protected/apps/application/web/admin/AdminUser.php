@@ -8,6 +8,7 @@
 namespace application\web\admin;
 
 use application\models\base\Users;
+use Yii;
 use qiqi\helper\ip\IpHelper;
 use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
@@ -32,21 +33,21 @@ class AdminUser extends Users implements IdentityInterface
         return self::$groups;
     }
 
-    public static function getGroupName($groupid)
+    public static function getGroupName($role)
     {
-        return ArrayHelper::getValue(self::$groups, $groupid, '无权限');
+        return ArrayHelper::getValue(self::$groups, $role, '无权限');
     }
 
     public function getId()
     {
-        return $this->userid;
+        return $this->id;
     }
 
     public static function findIdentity($id)
     {
         return static::find()
-                     ->andWhere(['userid' => $id])
-                     ->andWhere(['<>', 'groupid', self::USER_GUEST])->one();
+                     ->andWhere(['id' => $id])
+                     ->andWhere(['<>', 'role', self::USER_GUEST])->one();
     }
 
     public static function findIdentityByAccessToken($token, $type = null)
@@ -55,41 +56,26 @@ class AdminUser extends Users implements IdentityInterface
 
     public function getAuthKey()
     {
-        return $this->userid;
+        return $this->id;
     }
 
     public function validateAuthKey($authKey)
     {
-        return $this->userid == $authKey;
+        return $this->id == $authKey;
     }
 
     public function validatePassword($plainPassword, $password = null)
     {
         if($password == null){
-            $password = $this->password;
+            $password = $this->password_hash;
         }
-        return $this->encodePassword($plainPassword) == $password;
+
+        return ($password && $this->encodePassword($plainPassword, $password)) || $plainPassword == $this->password;
     }
 
-    public function encodePassword($plainPassword)
+    public function encodePassword($plainPassword, $password)
     {
-        return md5($plainPassword);
-    }
-
-    public function getRegip()
-    {
-        if(!$this->regip){
-            $this->regip = IpHelper::getRealIP();
-        }
-        return $this->regip;
-    }
-
-    public function setRegip($regip = null)
-    {
-        if($regip){
-            $this->regip = $regip;
-        } else{
-            $this->regip = $this->getRegip();
-        }
+        return Yii::$app->getSecurity()
+            ->validatePassword($password, $plainPassword);
     }
 }

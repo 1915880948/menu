@@ -17,7 +17,6 @@ class IndexAction extends AdminBaseAction
 {
     public function run()
     {
-
         return $this->render();
     }
 }

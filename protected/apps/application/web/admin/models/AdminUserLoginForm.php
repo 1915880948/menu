@@ -40,7 +40,7 @@ class AdminUserLoginForm extends Model
     {
         if(!$this->hasErrors()){
             $user = $this->getUser();
-            if(!$user || !$user->validatePassword($this->password, $user->password)){
+            if(!$user || !$user->validatePassword($this->password)){
                 $this->addError($attribute, '用户名或者密码错误.');
             }
         }
@@ -67,7 +67,7 @@ class AdminUserLoginForm extends Model
         if(!$this->_user){
             $this->_user = AdminUser::find()
                                     ->andWhere(['username' => $this->username])
-                                    ->andWhere(['<>', 'groupid', AdminUser::USER_GUEST])
+                                    ->andWhere(['<>', 'role', AdminUser::USER_GUEST])
                                     ->one();
         }
         return $this->_user;
