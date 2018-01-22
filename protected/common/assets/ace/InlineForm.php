@@ -36,7 +36,7 @@ class InlineForm extends ActiveForm
     public function submitInput($string = "Search")
     {
         return Html::label("&nbsp;" . Html::submitInput($string, [
-                'class' => 'input-group-btn btn btn-purple btn-sm input-small ',
+                'class' => 'btn btn-info btn-purple btn-sm input-small ',
                 'type'  => 'submit',
             ]));
     }
@@ -44,7 +44,7 @@ class InlineForm extends ActiveForm
     public function resetInput($string = "重置")
     {
         return Html::label("&nbsp;" . Html::resetInput($string, [
-                'class'   => 'input-group-btn btn btn-default btn-sm input-small ',
+                'class'   => 'btn btn-info btn-default btn-sm input-small ',
                 'onclick' => 'location.href=this.form.action'
             ]));
     }

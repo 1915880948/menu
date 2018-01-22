@@ -3,10 +3,10 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>数据统计 | @yield('title','')</title>
+    <title>小菜谱 | @yield('title','')</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <link rel="shortcut icon" href="{{yStatic('favicon.ico')}}">
+    <link rel="shortcut icon" href="{{yStatic('1.ico')}}">
     <!-- Bootstrap 3.3.7 -->
     <link rel="stylesheet" href="{{yStatic('vendor/bower_components/bootstrap/dist/css/bootstrap.min.css')}}">
     <!-- Font Awesome -->
@@ -14,20 +14,20 @@
     <!-- Ionicons -->
     <link rel="stylesheet" href="{{yStatic('vendor/bower_components/Ionicons/css/ionicons.min.css')}}">
     <!-- Morris chart -->
-    <link rel="stylesheet" href="{{yStatic('vendor/bower_components/morris.js/morris.css')}}">
+    {{--<link rel="stylesheet" href="{{yStatic('vendor/bower_components/morris.js/morris.css')}}">--}}
     <!-- Theme style -->
     <link rel="stylesheet" href="{{yStatic('vendor/dist/css/AdminLTE.min.css')}}">
     <!-- AdminLTE Skins. Choose a skin from the css/skins
          folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="{{yStatic('vendor/dist/css/skins/_all-skins.min.css')}}">
     <!-- jvectormap -->
-    <link rel="stylesheet" href="{{yStatic('vendor/bower_components/jvectormap/jquery-jvectormap.css')}}">
+    {{--<link rel="stylesheet" href="{{yStatic('vendor/bower_components/jvectormap/jquery-jvectormap.css')}}">--}}
     <!-- Date Picker -->
     <link rel="stylesheet" href="{{yStatic('vendor/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css')}}">
     <!-- Daterange picker -->
     <link rel="stylesheet" href="{{yStatic('vendor/bower_components/bootstrap-daterangepicker/daterangepicker.css')}}">
     <!-- bootstrap wysihtml5 - text editor -->
-    <link rel="stylesheet" href="{{yStatic('vendor/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')}}">
+    {{--<link rel="stylesheet" href="{{yStatic('vendor/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')}}">--}}
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -37,9 +37,9 @@
     <![endif]-->
 
     <!-- Google Font -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    {{--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">--}}
 
-    @stack('head-style')
+    @yield('head-style')
     @stack('head-script')
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -49,9 +49,9 @@
         <!-- Logo -->
         <a href="{{yUrl(['index'])}}" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b>D</b>ata</span>
+            <span class="logo-mini"><b>M</b>enu</span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b>Data</b>Total</span>
+            <span class="logo-lg"><b>Menu</b>管理后台</span>
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top">
@@ -100,79 +100,71 @@
                 <li class="header">菜单导航</li>
                 <li class="treeview">
                     <a href="#">
-                        <i class="fa fa-folder"></i> <span>项目</span>
+                        <i class="fa fa-tags"></i> <span>菜单标签</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="{{yUrl(['project/index'])}}"><i class="fa fa-line-chart"></i>趋势图</a></li>
+                        <li><a href="{{yUrl(['tag/index'])}}"><i class="fa fa-circle-o"></i>标签列表</a></li>
                     </ul>
                 </li>
                 <li class="treeview">
                     <a href="#">
-                        <i class="fa fa-firefox"></i> <span>浏览器数据</span>
+                        <i class="fa fa-list-ol"></i> <span>食疗分类</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="{{yUrl(['browser/index'])}}"><i class="fa fa-pie-chart"></i>图表</a></li>
-                        <li><a href="{{yUrl(['browser/list'])}}"><i class="fa fa-table"></i>列表</a></li>
+                        <li><a href="{{yUrl(['type/index'])}}"><i class="fa fa-circle-o"></i>分类列表</a></li>
                     </ul>
                 </li>
                 <li class="treeview">
                     <a href="#">
-                        <i class="fa fa-tree"></i> <span>Docu数据</span>
+                        <i class="fa fa-file-text-o"></i> <span>菜单管理</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="{{yUrl(['docu/index'])}}"><i class="fa fa-circle-o"></i>图表</a></li>
-                        <li><a href="{{yUrl(['docu/list'])}}"><i class="fa fa-circle-o"></i> 列表</a></li>
+                        <li><a href="{{yUrl(['menu/index'])}}"><i class="fa fa-circle-o"></i> 菜单列表</a></li>
+                        <li><a href="{{yUrl(['menu/edit'])}}"><i class="fa fa-circle-o"></i> 添加菜单</a></li>
                     </ul>
                 </li>
                 <li class="treeview">
                     <a href="#">
-                        <i class="fa fa-share"></i> <span>分享数据</span>
+                        <i class="fa fa-cny"></i> <span>订单管理</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="{{yUrl(['shares/index'])}}"><i class="fa fa-circle-o"></i>图表</a></li>
-                        <li><a href="{{yUrl(['shares/list'])}}"><i class="fa fa-circle-o"></i> 列表</a></li>
+                        <li><a href="{{yUrl(['order/index'])}}"><i class="fa fa-circle-o"></i> 订单列表</a></li>
                     </ul>
                 </li>
                 <li class="treeview">
                     <a href="#">
-                        <i class="fa fa-hand-o-up"></i> <span>导航点击数据</span>
+                        <i class="fa fa-user-plus"></i> <span>用户管理</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="{{yUrl(['sidebar/index'])}}"><i class="fa fa-circle-o"></i>图表</a></li>
-                        <li><a href="{{yUrl(['sidebar/list'])}}"><i class="fa fa-circle-o"></i> 列表</a></li>
+                        <li><a href="{{yUrl(['users/index'])}}"><i class="fa fa-circle-o"></i> 用户列表</a></li>
                     </ul>
                 </li>
-                <li class="treeview">
-                    <a href="#">
-                        <i class="fa fa-user"></i> <span>用户访问量</span>
-                        <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="{{yUrl(['visituser/index'])}}"><i class="fa fa-circle-o"></i>图表</a></li>
-                        <li><a href="{{yUrl(['visituser/list'])}}"><i class="fa fa-circle-o"></i> 列表</a></li>
-                    </ul>
-                </li>
-                {{--<li class="header">LABELS</li>--}}
-                {{--<li><a href="#"><i class="fa fa-circle-o text-red"></i> <span>Important</span></a></li>--}}
-                {{--<li><a href="#"><i class="fa fa-circle-o text-yellow"></i> <span>Warning</span></a></li>--}}
-                {{--<li><a href="#"><i class="fa fa-circle-o text-aqua"></i> <span>Information</span></a></li>--}}
+                {{--<li class="treeview">--}}
+                    {{--<a href="#">--}}
+                        {{--<i class="fa fa-pie-chart"></i> <span>食材管理</span>--}}
+                        {{--<span class="pull-right-container">--}}
+                            {{--<i class="fa fa-angle-left pull-right"></i>--}}
+                        {{--</span>--}}
+                    {{--</a>--}}
+                    {{--<ul class="treeview-menu">--}}
+                        {{--<li><a href="{{yUrl(['ingredients/index'])}}"><i class="fa fa-circle-o"></i> 食材列表</a></li>--}}
+                    {{--</ul>--}}
+                {{--</li>--}}
             </ul>
         </section>
         <!-- /.sidebar -->
@@ -215,17 +207,17 @@
 <script src="{{yStatic('vendor/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
 
 <!-- jvectormap -->
-<script src="{{yStatic('vendor/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js')}}"></script>
-<script src="{{yStatic('vendor/plugins/jvectormap/jquery-jvectormap-world-mill-en.js')}}"></script>
+{{--<script src="{{yStatic('vendor/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js')}}"></script>--}}
+{{--<script src="{{yStatic('vendor/plugins/jvectormap/jquery-jvectormap-world-mill-en.js')}}"></script>--}}
 <!-- jQuery Knob Chart -->
-<script src="{{yStatic('vendor/bower_components/jquery-knob/dist/jquery.knob.min.js')}}"></script>
+{{--<script src="{{yStatic('vendor/bower_components/jquery-knob/dist/jquery.knob.min.js')}}"></script>--}}
 
 <!-- Morris.js charts -->
-<script src="{{yStatic('vendor/bower_components/raphael/raphael.min.js')}}"></script>
-<script src="{{yStatic('vendor/bower_components/Chart.js/Chart.js')}}"></script>
-<script src="{{yStatic('vendor/bower_components/morris.js/morris.min.js')}}"></script>
+{{--<script src="{{yStatic('vendor/bower_components/raphael/raphael.min.js')}}"></script>--}}
+{{--<script src="{{yStatic('vendor/bower_components/Chart.js/Chart.js')}}"></script>--}}
+{{--<script src="{{yStatic('vendor/bower_components/morris.js/morris.min.js')}}"></script>--}}
 <!-- Sparkline -->
-<script src="{{yStatic('vendor/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js')}}"></script>
+{{--<script src="{{yStatic('vendor/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js')}}"></script>--}}
 
 
 <!-- daterangepicker -->
@@ -235,7 +227,7 @@
 <script src="{{yStatic('vendor/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')}}"></script>
 <script src="{{yStatic('vendor/plugins/timepicker/bootstrap-timepicker.min.js')}}"></script>
 <!-- Bootstrap WYSIHTML5 -->
-<script src="{{yStatic('vendor/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')}}"></script>
+{{--<script src="{{yStatic('vendor/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')}}"></script>--}}
 <!-- Slimscroll -->
 <script src="{{yStatic('vendor/bower_components/jquery-slimscroll/jquery.slimscroll.min.js')}}"></script>
 <!-- FastClick -->
@@ -243,32 +235,19 @@
 <!-- AdminLTE App -->
 <script src="{{yStatic('vendor/dist/js/adminlte.min.js')}}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="{{yStatic('vendor/dist/js/pages/dashboard.js')}}"></script>
+{{--<script src="{{yStatic('vendor/dist/js/pages/dashboard.js')}}"></script>--}}
 <!-- AdminLTE for demo purposes -->
 <script src="{{yStatic('vendor/dist/js/demo.js')}}"></script>
 <script src="{{yStatic('app.js')}}"></script>
 <!-- baidu echarts -->
-<script src="{{yStatic('vendor/dist/baidu/dist/echarts.min.js')}}"></script>
-<script src="{{yStatic('vendor/dist/baidu/dist/china.js')}}"></script>
+{{--<script src="{{yStatic('vendor/dist/baidu/dist/echarts.min.js')}}"></script>--}}
+{{--<script src="{{yStatic('vendor/dist/baidu/dist/china.js')}}"></script>--}}
 <!-- layer js -->
 <script src="{{yStatic('vendor/layer/layer.js')}}"></script>
 
 <script>
     $(function(){
-        var li_index = localStorage.getItem('li_index');
-        var ul_index = localStorage.getItem('ul_index');
-        if( li_index && ul_index ){
-            $('.main-sidebar .sidebar-menu .treeview').removeClass('active');
-            $('.main-sidebar .sidebar-menu .treeview .treeview-menu li').removeClass('active');
-
-            $('.main-sidebar .sidebar-menu').find('.treeview').eq(ul_index-1).addClass('active');
-            $('.main-sidebar .sidebar-menu').find('.treeview').eq(ul_index-1).find('li').eq(li_index).addClass('active');
-        }
-        $('.main-sidebar .sidebar-menu .treeview .treeview-menu>li').click(function(){
-            var _this = $(this);
-            localStorage.setItem('li_index', _this.index());
-            localStorage.setItem('ul_index', _this.parent().parent('.treeview').index());
-        })
+        $('a[href="'+window.location.pathname+'"]').parent('li').addClass('active').parents('li').addClass('active').addClass('menu-open');
     });
 </script>
 @stack('foot-script')

@@ -30,6 +30,7 @@
     <style type="text/css">
         .login-box, .register-box {
             width: 360px;
+        }
     </style>
 </head>
 <body class="hold-transition login-page">

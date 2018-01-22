@@ -415,3 +415,7 @@ function yApp($name,$params = []){
 function app($name,$params = []){
     return Yii::createObject($name,$params);
 }
+
+function yIngredientsName($id){
+    return $id==1?'主料':($id==2?'辅料':'调料');
+}
