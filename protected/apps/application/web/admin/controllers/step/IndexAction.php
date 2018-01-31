@@ -15,16 +15,14 @@ class IndexAction extends AdminBaseAction
         $ingresQuery = Ingredients::find()
             ->andWhere(['status' => 1, 'menu_id' => $id])
             ->orderBy(['type_id' => SORT_ASC]);
-        $stepList = Step::find()
+        $stepQuery = Step::find()
             ->andWhere(['status' => 1, 'menu_id' => $id])
-            ->orderBy(['step_number' => SORT_ASC])
-            ->asArray()
-            ->all();
+            ->orderBy(['step_number' => SORT_ASC]);
         $tipsQuery = Tips::find()
             ->andWhere(['status' => 1, 'menu_id' => $id])
             ->orderBy(['tip_number' => SORT_ASC]);
         $ingresList = DataProviderHelper::create($ingresQuery);
-//        $stepList = DataProviderHelper::create($stepQuery);
+        $stepList = DataProviderHelper::create($stepQuery);
         $tipsList = DataProviderHelper::create($tipsQuery);
         return $this->render(compact('ingresList', 'stepList', 'tipsList'));
     }

@@ -95,54 +95,79 @@
         </div>
     </div>
     <hr/>
+
+
     <div class="row">
         <div class="col-xs-12">
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="box">
+                    <div class="box" id="sort">
                         <div class="box-header">
-                            <h3 class="box-title pull-left">步骤<span id="tip_message">--支持拖动排序</span></h3>
-                            <div class="box-tools">
+                            <h3 class="box-title">步骤<span id="tip_message">--支持拖动排序</span></h3>
+                            <div class="pull-right box-tools">
                                 <button class="btn btn-info add_step">添加步骤</button>
                             </div>
                         </div>
-                        <table class="table table-striped table-bordered" id="sort">
-                            <thead>
-                            <tr>
-                                <th class="col-sm-1"><a href="javascript:;">步骤</a></th>
-                                <th class="col-sm-5"><a href="javascript:;">方法</a></th>
-                                <th class="col-sm-4"><a href="javascript:;">配图</a></th>
-                                <th class="col-sm-2"><a href="javascript:;">功能管理</a></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($stepList as $item)
-                                <tr data-id="{{$item['id']}}">
-                                    <td class="col-sm-1 step_index" data-id="{{$item['id']}}">{{$item['step_number']}}</td>
-                                    <td class="col-sm-5">
-                                        {{$item['method']}}
-                                    </td>
-                                    <td class="col-sm-4">
-                                        @if($item['images'])
-                                        @foreach ( json_decode($item['images']) as $k=>$v)
-                                            <img src="{{$v}}" width="80" height="80" />&nbsp;&nbsp;
-                                        @endforeach
-                                            @endif
-                                    </td>
-                                    <td class="col-sm-2">
-                                        <a id="{{$item['id']}}" class="step_edit" href="javascript:void(0);">修改</a>
-                                        <a id="{{$item['id']}}" class="step_delete" href="javascript:void(0);">删除</a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
+                        <?php
+                        echo GridView::widget([
+                            'dataProvider' => $stepList,
+                            'emptyText' => '暂无记录',
+                            'layout' => "{items}\n{summary}<div class=\"text-right tooltip-demo\" style=\"margin-top: -40px;\">{pager}</div>",
+                            'showFooter' => false,
+                            'showHeader' => true,
+                            'columns' => [
+                                [
+                                    'contentOptions' => ['class' => 'col-sm-1'],
+                                    'attribute' => 'step_number',
+                                    'format' => 'html',
+                                    'label' => '步骤',
+                                ],
+                                [
+                                    'contentOptions' => ['class' => 'col-sm-5'],
+                                    'attribute' => 'method',
+                                    'label' => '方法',
+                                ],
+                                [
+                                    'contentOptions' => ['class' => 'col-sm-4'],
+                                    'attribute' => 'images',
+                                    'format' => 'html',
+                                    'label' => '配图',
+                                    'value' => function($model){
+                                    if( $model->images ){
+                                        $img = '';
+                                        foreach ( json_decode($model->images) as $k=>$v){
+                                            $img .= '<img src="'.$v.'" width="80" height="80" style="display:inline" />&nbsp;&nbsp;';
+                                            }
+                                            return $img;
+                                        }
+                                    }
+                                ],
+                                [
+                                    /** @see yii\grid\ActionColumn */
+                                    'header' => '功能管理',
+                                    'headerOptions' => ['class' => 'center'],
+                                    'contentOptions' => ['class' => 'col-sm-2 center'],
+                                    'class' => 'yii\grid\ActionColumn',
+                                    'template' => '{edit} {delete}',
+                                    'buttons' => [
+                                        'edit' => function ($url, $model) use ($selfurl) {
+                                            return Html::a('修改', 'javascript:void(0);', ['class' => 'step_edit step_index', 'id' => $model->id, 'data-id' => $model->id]);
+                                        },
+                                        'delete' => function ($url, $model) use ($selfurl) {
+                                            return Html::a('删除', 'javascript:;', ['id' => $model['id'], 'class' => 'step_delete']);
+                                        },
+                                    ],
+                                ],
+
+                            ]
+                        ])
+                        ?>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+    <hr/>
 
     <div class="row">
         <div class="col-xs-12">
@@ -266,8 +291,8 @@
     <script>
         function imgRemove() {
             document.getElementById("upload").style.display='inline';
-            $('add_img').remove();
-            $('add_input').remove();
+            $('.add_img').remove();
+            $('.add_input').remove();
         }
         $(function () {
 
