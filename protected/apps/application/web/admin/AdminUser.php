@@ -69,7 +69,6 @@ class AdminUser extends Users implements IdentityInterface
         if($password == null){
             $password = $this->password_hash;
         }
-
         return ($password && $this->encodePassword($plainPassword, $password)) || $plainPassword == $this->password;
     }
 

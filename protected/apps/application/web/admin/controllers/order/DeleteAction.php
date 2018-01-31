@@ -1,8 +1,7 @@
 <?php
-namespace application\web\admin\controllers\tips;
-use application\models\base\Tips;
+namespace application\web\admin\controllers\order;
+use application\models\base\Order;
 use application\web\admin\components\AdminBaseAction;
-use qiqi\helper\MessageHelper;
 
 class DeleteAction extends AdminBaseAction{
     public $method = 'post';
@@ -11,10 +10,10 @@ class DeleteAction extends AdminBaseAction{
     public function run(){
         if( \Yii::$app->request->isPost ){
             $id = \Yii::$app->request->post('id');
-            $model = Tips::findByPk($id);
+            $model = Order::findByPk($id);
             $model->status = 0;
             if( $model->save() ){
-                return ['code'=>200, 'message'=>'删除成功！'];
+                return ['code'=>200,'message'=>'success'];
             }else{
                 return ['code'=>500,'message'=>$model->getErrors()];
             }

@@ -1,18 +1,16 @@
 <?php
-
 namespace application\web\admin\controllers\step;
-
 use application\models\base\Step;
 use application\web\admin\components\AdminBaseAction;
 
-class AddAction extends AdminBaseAction
+class EditAction extends AdminBaseAction
 {
     public function run()
     {
         if (\Yii::$app->request->isPost) {
             \Yii::$app->response->format = 'json';
             $postData = \Yii::$app->request->post();
-            $model = new Step();
+            $model = Step::findByPk($postData['id']);
             if (trim($postData['images']) ){
                 $imageArr = explode(',', trim($postData['images'], ','));
                 $model->images = json_encode($imageArr);

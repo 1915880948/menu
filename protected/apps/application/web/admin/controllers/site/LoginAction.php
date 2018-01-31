@@ -32,9 +32,10 @@ class LoginAction extends AdminBaseAction
         $model = new AdminUserLoginForm();
         if($this->request->getIsPost()){
             $model->load($this->request->post());
-//            print_r($model->validate() );
-            if($model->validate() && $model->login()){
-                return MessageHelper::show('提示信息', '恭喜你登录成功', ['site/index']);
+//            print_r( $model->validate() );
+//            print_r( $model->login() ); die;
+            if( $model->validate() && $model->login()){
+                return MessageHelper::show('提示信息', '恭喜你登录成功', ['menu/index']);
             }
             GSession::setDbError($model);
             return MessageHelper::errorShow('提示', '用户名或者密码不正常', ['site/login']);

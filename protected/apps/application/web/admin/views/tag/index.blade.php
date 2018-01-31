@@ -59,10 +59,10 @@
                                     'template'       => '{edit} {delete}',
                                     'buttons'        => [
                                         'edit'   => function($url, $model) use ($selfurl) {
-                                            return Html::a('修改', ['tag/index', 'id' => $model['id']], []);
+                                            return Html::a('修改', ['/tag/index', 'id' => $model['id']], []);
                                         },
-                                        'delete'   => function($url, $model) use ($selfurl) {
-                                            return Html::a('删除', ['tag/delete', 'id' => $model['id']], []);
+                                        'delete' => function($url, $model) {
+                                            return Html::a('删除', 'javascript:;', ['id' => $model['id'],'class'=>'delete' ]);
                                         },
                                     ],
                                 ],
@@ -91,7 +91,21 @@
 @push('foot-script')
     <script>
         $(function () {
+            $('.delete').click(function () {
+                var _this = $(this);
+                layer.confirm('您确认要删除吗?', {icon: 3}, function(index){
+                    $.post("{{yUrl('tag/delete')}}",{'id':_this.attr('id')},function (res) {
+                        if(res.code == 200 ){
+                            layer.msg('删除成功！',{icon:1,time:1200},location.reload());
+                        }else{
+                            layer.msg('删除失败！',{icon:2,time:1200},function (err) {
+                                console.log(err.message);
+                            });
+                        }
+                    });
 
+                });
+            });
         });
     </script>
 @endpush

@@ -38,6 +38,7 @@ class AdminUserLoginForm extends Model
 
     public function validatePassword($attribute, $params)
     {
+//        dd( $this->password );
         if(!$this->hasErrors()){
             $user = $this->getUser();
             if(!$user || !$user->validatePassword($this->password)){

@@ -8,14 +8,7 @@ use qiqi\helper\DataProviderHelper;
 use qiqi\helper\MessageHelper;
 
 class IndexAction extends AdminBaseAction{
-    public function run($id = '',$type_id='',$tag_ids='',$name=''){
-        if( $id ){
-            $model = Menu::findByPk($id);
-            $model->status = 0;
-            if( $model->save() ){
-                return MessageHelper::success('删除成功！');
-            }
-        }
+    public function run($type_id='',$tag_ids='',$name=''){
         $tag_list = MenuTag::find()
             ->andWhere(['status'=>1,'is_use'=>1])
             ->asArray()
